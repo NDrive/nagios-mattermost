@@ -25,18 +25,20 @@ import urllib2
 import json
 
 CONFIG = {
-    "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png",
+    "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png", #noqa
     "username": "Nagios"
 }
 
-TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}"
-TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}"
+TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" #noqa
+TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}"  #noqa
+
 
 def parse():
     parser = argparse.ArgumentParser(description='Send mattermost webhooks')
     parser.add_argument('--url', help='Integration URL', required=True)
     parser.add_argument('--hostalias', help='Host Alias', required=True)
-    parser.add_argument('--notificationtype', help='Notification type', required=True)
+    parser.add_argument('--notificationtype', help='Notification type',
+                        required=True)
     parser.add_argument('--hoststate', help='Host State')
     parser.add_argument('--hostoutput', help='Host Output')
     parser.add_argument('--servicedesc', help='Service Description')
@@ -45,16 +47,25 @@ def parse():
     args = parser.parse_args()
     return args
 
+
+def encode_special_characters(text):
+    text = text.replace("%", "%25")
+    return text
+
+
 def make_data(args, config):
     template = TEMPLATE_SERVICE if args.servicestate else TEMPLATE_HOST
     text = template.format(**vars(args))
+
     payload = {
         "username": config["username"],
         "icon_url": config["icon_url"],
-        "text": text
+        "text": encode_special_characters(text)
     }
+
     data = "payload=" + json.dumps(payload)
     return data
+
 
 def request(url, data):
     req = urllib2.Request(url, data)
