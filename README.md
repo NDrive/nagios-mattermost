@@ -9,14 +9,14 @@ Assuming you are using Nagios 4, the steps are:
 
         define command {
               command_name notify-service-by-mattermost
-              command_line /usr/local/nagios/libexec/mattermost.py --url [URL] --hostalias "$HOSTNAME$" --notificationtype "$NOTIFICATIONTYPE$" --servicedesc "$SERVICEDESC$" --servicestate "$SERVICESTATE$" --serviceoutput "$SERVICEOUTPUT$"
+              command_line /usr/local/nagios/libexec/mattermost.py --url [URL] --channel [CHANNEL] --hostalias "$HOSTNAME$" --notificationtype "$NOTIFICATIONTYPE$" --servicedesc "$SERVICEDESC$" --servicestate "$SERVICESTATE$" --serviceoutput "$SERVICEOUTPUT$"
         }
 
         define command {
               command_name notify-host-by-mattermost
-              command_line /usr/local/nagios/libexec/mattermost.py --url [URL] --hostalias "$HOSTNAME$" --notificationtype "$NOTIFICATIONTYPE$" --hoststate "$HOSTSTATE$" --hostoutput "$HOSTOUTPUT$"
+              command_line /usr/local/nagios/libexec/mattermost.py --url [URL] --channel [CHANNEL] --hostalias "$HOSTNAME$" --notificationtype "$NOTIFICATIONTYPE$" --hoststate "$HOSTSTATE$" --hostoutput "$HOSTOUTPUT$"
         }
-        
+
 3. Create the contact:
 
 

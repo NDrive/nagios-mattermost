@@ -24,6 +24,8 @@ import argparse
 import urllib2
 import json
 
+VERSION = "0.1.0"
+
 CONFIG = {
     "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png", #noqa
     "username": "Nagios"
@@ -34,7 +36,7 @@ TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}
 
 
 def parse():
-    parser = argparse.ArgumentParser(description='Send mattermost webhooks')
+    parser = argparse.ArgumentParser(description='Sends mattermost webhooks')
     parser.add_argument('--url', help='Integration URL', required=True)
     parser.add_argument('--hostalias', help='Host Alias', required=True)
     parser.add_argument('--notificationtype', help='Notification type',
@@ -44,6 +46,9 @@ def parse():
     parser.add_argument('--servicedesc', help='Service Description')
     parser.add_argument('--servicestate', help='Service State')
     parser.add_argument('--serviceoutput', help='Service Output')
+    parser.add_argument('--channel', help='Channel to notificate')
+    parser.add_argument('--version', action='version',
+                    version='%(prog)s {version}'.format(version=VERSION))
     args = parser.parse_args()
     return args
 
@@ -62,6 +67,9 @@ def make_data(args, config):
         "icon_url": config["icon_url"],
         "text": encode_special_characters(text)
     }
+
+    if args.channel:
+        payload["channel"] = args.channel
 
     data = "payload=" + json.dumps(payload)
     return data
