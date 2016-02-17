@@ -24,7 +24,7 @@ import argparse
 import urllib2
 import json
 
-VERSION = "0.1.0"
+VERSION = "0.1.1E"
 
 CONFIG = {
     "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png", #noqa
@@ -60,8 +60,21 @@ def encode_special_characters(text):
 
 def make_data(args, config):
     template = TEMPLATE_SERVICE if args.servicestate else TEMPLATE_HOST
-    text = template.format(**vars(args))
-
+    
+    # Emojis
+    if args.notificationtype == "RECOVERY":
+        EMOJI = ":white_check_mark:"
+    elif args.notificationtype == "PROBLEM":
+        EMOJI = ":fire:"
+    elif args.notificationtype == "DOWNTIMESTART":
+        EMOJI = ":clock10:"
+    elif args.notificationtype == "DOWNTIMEEND":
+        EMOJI = ":sunny:"
+    else:
+        EMOJI = ""
+    
+    text = EMOJI + template.format(**vars(args))
+    
     payload = {
         "username": config["username"],
         "icon_url": config["icon_url"],
