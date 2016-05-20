@@ -5,7 +5,10 @@ A plugin for Nagios to enable notifications to Mattermost Open Source Chat.
 Assuming you are using Nagios 4, the steps are:
 
 1. Copy _mattermost.py_ to /usr/local/nagios/libexec.
-2. Create the notification command:
+
+2. Create a new incoming webhook integration, and use the URL for the webhook in the next step. 
+
+3. Create the notification command:
 
         define command {
               command_name notify-service-by-mattermost
@@ -17,7 +20,7 @@ Assuming you are using Nagios 4, the steps are:
               command_line /usr/local/nagios/libexec/mattermost.py --url [URL] --channel [CHANNEL] --hostalias "$HOSTNAME$" --notificationtype "$NOTIFICATIONTYPE$" --hoststate "$HOSTSTATE$" --hostoutput "$HOSTOUTPUT$"
         }
 
-3. Create the contact:
+4. Create the contact:
 
 
         define contact {
@@ -31,7 +34,7 @@ Assuming you are using Nagios 4, the steps are:
           host_notification_commands               notify-host-by-mattermost
         }
 
-4. Add the contact to a contact group:
+5. Add the contact to a contact group:
 
 
         define contactgroup{
