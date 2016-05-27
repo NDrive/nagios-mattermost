@@ -26,11 +26,6 @@ import urllib2
 
 VERSION = "0.1.1E"
 
-CONFIG = {
-    "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png", # noqa
-    "username": "Nagios"
-}
-
 TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
 TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
 
@@ -39,6 +34,10 @@ def parse():
     parser = argparse.ArgumentParser(description='Sends alerts to Mattermost')
     parser.add_argument('--url', help='Incoming Webhook URL', required=True)
     parser.add_argument('--channel', help='Channel to notify')
+    parser.add_argument('--username', help='Username to notify as',
+                        default='Nagios')
+    parser.add_argument('--iconurl', help='URL of icon to use for username',
+                        default='https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png') # noqa
     parser.add_argument('--notificationtype', help='Notification Type',
                         required=True)
     parser.add_argument('--hostalias', help='Host Alias', required=True)
@@ -58,7 +57,7 @@ def encode_special_characters(text):
     return text
 
 
-def make_data(args, config):
+def make_data(args):
     template = TEMPLATE_SERVICE if args.servicestate else TEMPLATE_HOST
 
     # Emojis
@@ -76,8 +75,8 @@ def make_data(args, config):
     text = EMOJI + template.format(**vars(args))
 
     payload = {
-        "username": config["username"],
-        "icon_url": config["icon_url"],
+        "username": args.username,
+        "icon_url": args.iconurl,
         "text": encode_special_characters(text)
     }
 
@@ -96,6 +95,6 @@ def request(url, data):
 
 if __name__ == "__main__":
     args = parse()
-    data = make_data(args, CONFIG)
+    data = make_data(args)
     response = request(args.url, data)
     print response
