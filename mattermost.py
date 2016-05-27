@@ -27,12 +27,12 @@ import json
 VERSION = "0.1.1E"
 
 CONFIG = {
-    "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png", #noqa
+    "icon_url": "https://slack.global.ssl.fastly.net/7bf4/img/services/nagios_128.png", # noqa
     "username": "Nagios"
 }
 
-TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" #noqa
-TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}"  #noqa
+TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
+TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
 
 
 def parse():
@@ -60,7 +60,7 @@ def encode_special_characters(text):
 
 def make_data(args, config):
     template = TEMPLATE_SERVICE if args.servicestate else TEMPLATE_HOST
-    
+
     # Emojis
     if args.notificationtype == "RECOVERY":
         EMOJI = ":white_check_mark:"
@@ -72,9 +72,9 @@ def make_data(args, config):
         EMOJI = ":sunny:"
     else:
         EMOJI = ""
-    
+
     text = EMOJI + template.format(**vars(args))
-    
+
     payload = {
         "username": config["username"],
         "icon_url": config["icon_url"],
@@ -92,6 +92,7 @@ def request(url, data):
     req = urllib2.Request(url, data)
     response = urllib2.urlopen(req)
     return response.read()
+
 
 if __name__ == "__main__":
     args = parse()
