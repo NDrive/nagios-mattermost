@@ -21,8 +21,8 @@
 # THE SOFTWARE.
 
 import argparse
-import urllib2
 import json
+import urllib2
 
 VERSION = "0.1.1E"
 
@@ -31,24 +31,24 @@ CONFIG = {
     "username": "Nagios"
 }
 
-TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
 TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
+TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
 
 
 def parse():
-    parser = argparse.ArgumentParser(description='Sends mattermost webhooks')
-    parser.add_argument('--url', help='Integration URL', required=True)
-    parser.add_argument('--hostalias', help='Host Alias', required=True)
-    parser.add_argument('--notificationtype', help='Notification type',
+    parser = argparse.ArgumentParser(description='Sends alerts to Mattermost')
+    parser.add_argument('--url', help='Incoming Webhook URL', required=True)
+    parser.add_argument('--channel', help='Channel to notify')
+    parser.add_argument('--notificationtype', help='Notification Type',
                         required=True)
+    parser.add_argument('--hostalias', help='Host Alias', required=True)
     parser.add_argument('--hoststate', help='Host State')
     parser.add_argument('--hostoutput', help='Host Output')
     parser.add_argument('--servicedesc', help='Service Description')
     parser.add_argument('--servicestate', help='Service State')
     parser.add_argument('--serviceoutput', help='Service Output')
-    parser.add_argument('--channel', help='Channel to notificate')
     parser.add_argument('--version', action='version',
-                    version='%(prog)s {version}'.format(version=VERSION))
+                        version='% (prog)s {version}'.format(version=VERSION))
     args = parser.parse_args()
     return args
 
