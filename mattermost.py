@@ -27,7 +27,7 @@ import urllib2
 VERSION = "0.2.0"
 
 TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
-TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
+TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias} at {hostaddress}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
 
 
 def parse():
@@ -41,6 +41,7 @@ def parse():
     parser.add_argument('--notificationtype', help='Notification Type',
                         required=True)
     parser.add_argument('--hostalias', help='Host Alias', required=True)
+    parser.add_argument('--hostaddress', help='Host Address', required=True)
     parser.add_argument('--hoststate', help='Host State')
     parser.add_argument('--hostoutput', help='Host Output')
     parser.add_argument('--servicedesc', help='Service Description')
