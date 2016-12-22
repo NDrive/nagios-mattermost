@@ -32,6 +32,7 @@ The steps below are for a Nagios 4 server but should work with minimal modificat
                                                              --channel [OPTIONAL-MATTERMOST-CHANNEL] \
                                                              --notificationtype "$NOTIFICATIONTYPE$" \
                                                              --hostalias "$HOSTNAME$" \
+                                                             --hostaddress "$HOSTADDRESS$" \
                                                              --servicedesc "$SERVICEDESC$" \
                                                              --servicestate "$SERVICESTATE$" \
                                                              --serviceoutput "$SERVICEOUTPUT$"
@@ -43,6 +44,7 @@ The steps below are for a Nagios 4 server but should work with minimal modificat
                                                              --channel [OPTIONAL-MATTERMOST-CHANNEL] \
                                                              --notificationtype "$NOTIFICATIONTYPE$" \
                                                              --hostalias "$HOSTNAME$" \
+                                                             --hostaddress "$HOSTADDRESS$" \
                                                              --hoststate "$HOSTSTATE$" \
                                                              --hostoutput "$HOSTOUTPUT$"
     }
