@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/env python
 
 # Copyright (c) 2015 NDrive SA
 #
@@ -24,10 +24,7 @@ import argparse
 import json
 import urllib2
 
-VERSION = "0.3.0"
-
-TEMPLATE_HOST = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
-TEMPLATE_SERVICE = "__{notificationtype}__ {hostalias} at {hostaddress}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
+VERSION = "0.3.1"
 
 
 def parse():
@@ -58,27 +55,29 @@ def encode_special_characters(text):
     return text
 
 
-def make_data(args):
-    template = TEMPLATE_SERVICE if args.servicestate else TEMPLATE_HOST
+def emoji(notificationtype):
+    return {
+        "RECOVERY": ":white_check_mark:",
+        "PROBLEM": ":fire:",
+        "DOWNTIMESTART": ":clock10:",
+        "DOWNTIMEEND": ":sunny:"
+    }.get(notificationtype, "")
 
-    # Emojis
-    if args.notificationtype == "RECOVERY":
-        EMOJI = ":white_check_mark:"
-    elif args.notificationtype == "PROBLEM":
-        EMOJI = ":fire:"
-    elif args.notificationtype == "DOWNTIMESTART":
-        EMOJI = ":clock10:"
-    elif args.notificationtype == "DOWNTIMEEND":
-        EMOJI = ":sunny:"
-    else:
-        EMOJI = ""
 
-    text = EMOJI + template.format(**vars(args))
+def text(args):
+    template_host = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
+    template_service = "__{notificationtype}__ {hostalias} at {hostaddress}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
+    template = template_service if args.servicestate else template_host
 
+    text = emoji(args.notificationtype) + template.format(**vars(args))
+    return encode_special_characters(text)
+
+
+def payload(args):
     payload = {
         "username": args.username,
         "icon_url": args.iconurl,
-        "text": encode_special_characters(text)
+        "text": text(args)
     }
 
     if args.channel:
@@ -96,6 +95,5 @@ def request(url, data):
 
 if __name__ == "__main__":
     args = parse()
-    data = make_data(args)
-    response = request(args.url, data)
+    response = request(args.url, payload(args))
     print response
