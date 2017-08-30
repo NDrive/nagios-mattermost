@@ -44,6 +44,7 @@ def parse():
     parser.add_argument('--servicedesc', help='Service Description')
     parser.add_argument('--servicestate', help='Service State')
     parser.add_argument('--serviceoutput', help='Service Output')
+    parser.add_argument('--cgiurl', help='Link to extinfo.cgi on your Nagios instance')
     parser.add_argument('--version', action='version',
                         version='% (prog)s {version}'.format(version=VERSION))
     args = parser.parse_args()
@@ -52,6 +53,7 @@ def parse():
 
 def encode_special_characters(text):
     text = text.replace("%", "%25")
+    text = text.replace("&", "%26")
     return text
 
 
@@ -67,9 +69,15 @@ def emoji(notificationtype):
 def text(args):
     template_host = "__{notificationtype}__ {hostalias} is {hoststate}\n{hostoutput}" # noqa
     template_service = "__{notificationtype}__ {hostalias} at {hostaddress}/{servicedesc} is {servicestate}\n{serviceoutput}" # noqa
+    template_cgiurl = " [View :link:]({cgiurl}?type=2&host={hostalias}&service={servicedesc})"
     template = template_service if args.servicestate else template_host
 
     text = emoji(args.notificationtype) + template.format(**vars(args))
+    if args.servicestate:
+        # If we know the CGI url, and this is a service notification,
+        # provide a clickable link to the nagios CGI
+        text = text + template_cgiurl.format(**vars(args))
+
     return encode_special_characters(text)
 
 
