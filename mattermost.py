@@ -59,10 +59,10 @@ def encode_special_characters(text):
 
 def emoji(notificationtype):
     return {
-        "RECOVERY": ":white_check_mark:",
-        "PROBLEM": ":fire:",
-        "DOWNTIMESTART": ":clock10:",
-        "DOWNTIMEEND": ":sunny:"
+        "RECOVERY": ":white_check_mark: ",
+        "PROBLEM": ":fire: ",
+        "DOWNTIMESTART": ":clock10: ",
+        "DOWNTIMEEND": ":sunny: "
     }.get(notificationtype, "")
 
 
